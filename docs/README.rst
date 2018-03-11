@@ -17,7 +17,7 @@ The simples way to install is using pip::
 
 .. _`setuptools`: https://pypi.python.org/pypi/setuptools
 
-You can also download the source from https://github.com/ScaDS/ORC-Schlange and run the make script to install the package.
+You can also download the source from https://github.com/Fabianexe/Superbubble and run the make script to install the package.
 These needs that `setuptools`_ are installed.
 
 Usage
