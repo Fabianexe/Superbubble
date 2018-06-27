@@ -1,19 +1,26 @@
-Linear Superbubble Dector
-=========================
+Linear Superbubble Detector
+===========================
+
+.. image:: logo.png
 
 Introduction
 ------------
 This project gives the reference implementation of the Linear Superbubble Dector (LSD).
 
+.. _`NetworkX`: https://networkx.github.io
 Features
 --------
-- TODO
+- Detect superbubbles in linear time
+- Uses `NetworkX`_  as graph library
+- Can load plenty file formats (everything that `NetworkX`_  can load)
+- Have different ways to report the superbubbles
+- Simple and clean to understand code
 
 Installation
 ------------
 The simples way to install is using pip::
 
-   pip install ORCSchlange
+   pip install LSD
 
 .. _`setuptools`: https://pypi.python.org/pypi/setuptools
 
@@ -22,9 +29,18 @@ These needs that `setuptools`_ are installed.
 
 Usage
 -----
+The programms needs only a path to a graph file to work:
 
-TODO 
-To use the program first a SQLite db must be created with::
+   lsd *path*
 
-   orcs db create --dbfile *path*
+If as input format not edgelist is used give the format with the -f parameter
 
+   lsd *path* -f gml
+
+If you want a different reporting format use -r
+
+   lsd *path* -r count
+
+If you want not to detect superbubbles but week superbubbles use --week:
+
+   lsd *path* --week
