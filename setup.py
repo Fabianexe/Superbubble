@@ -20,13 +20,16 @@ setup(
     license="BSD 3-Clause",
     long_description=read('docs/README.rst'),
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Environment :: Console",
-        "License :: OSI Approved :: Apache Software License",
+        "License :: OSI Approved :: BSD License",
         "Natural Language :: English",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6"
+        "Programming Language :: Python :: 3.6",
+        "Intended Audience :: Developers",
+        "Intended Audience :: Science/Research",
+        "Topic :: Scientific/Engineering :: Bio-Informatics"
     ],
     entry_points={
         'console_scripts': [
@@ -39,5 +42,5 @@ setup(
             'release': ('setup.py', __version__)
         }
     },
-    keywords="TODO"
+    keywords="graph, superbubble, ﻿de Bruijn graph, ﻿Genome assembly, ﻿Linear time algorithm"
 )
