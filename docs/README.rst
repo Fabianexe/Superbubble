@@ -1,7 +1,7 @@
 Linear Superbubble Detector
 ===========================
 
-.. image:: https://github.com/Fabianexe/Superbubble/raw/master/logo.png
+.. image:: https://raw.githubusercontent.com/Fabianexe/Superbubble/master/logo.png
 
 Introduction
 ------------
