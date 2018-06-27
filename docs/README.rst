@@ -15,7 +15,8 @@ Features
 - Uses `NetworkX`_  as graph library
 - Can load plenty file formats (everything that `NetworkX can load`_ )
 - Have different ways to report the superbubbles
-- Simple and clean to understand code
+- Simple and clean code
+- Simple to understand and reimplement
 
 Installation
 ------------
