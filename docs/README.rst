@@ -8,11 +8,12 @@ Introduction
 This project gives the reference implementation of the Linear Superbubble Dector (LSD).
 
 .. _`NetworkX`: https://networkx.github.io
+.. _`NetworkX can load`: https://networkx.github.io/documentation/stable/reference/readwrite/index.html
 Features
 --------
 - Detect superbubbles in linear time
 - Uses `NetworkX`_  as graph library
-- Can load plenty file formats (everything that `NetworkX`_  can load)
+- Can load plenty file formats (everything that `NetworkX can load`_ )
 - Have different ways to report the superbubbles
 - Simple and clean to understand code
 
