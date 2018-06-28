@@ -19,6 +19,11 @@ Features
 - Simple and clean code
 - Simple to understand and reimplement
 
+Documentation
+=============
+The documentation can be found at:
+https://fabianexe.github.io/Superbubble
+
 Installation
 ------------
 The simples way to install is using pip::
