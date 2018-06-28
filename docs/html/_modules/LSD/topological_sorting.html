@@ -59,7 +59,7 @@
 <span class="sd">    </span>
 <span class="sd">        def toposort(g):</span>
 <span class="sd">            order = Order(g.a, g.b)</span>
-<span class="sd">            rec_call(g.a, order, g, lambda v: check_pre(v, g.g, order))</span>
+<span class="sd">            rec_call(g.a, order, g, lambda v: check_pre(v, g, order))</span>
 <span class="sd">            return order</span>
 <span class="sd">    </span>
 <span class="sd">            </span>

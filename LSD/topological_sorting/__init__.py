@@ -18,7 +18,7 @@ def toposort(g):
     
         def toposort(g):
             order = Order(g.a, g.b)
-            rec_call(g.a, order, g, lambda v: check_pre(v, g.g, order))
+            rec_call(g.a, order, g, lambda v: check_pre(v, g, order))
             return order
     
             
