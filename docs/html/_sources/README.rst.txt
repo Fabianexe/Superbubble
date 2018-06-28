@@ -28,7 +28,7 @@ Installation
 ------------
 The simples way to install is using pip::
 
-   pip install LSD
+   pip install LSD-Bubble
 
 .. _`setuptools`: https://pypi.python.org/pypi/setuptools
 

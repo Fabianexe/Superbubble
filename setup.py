@@ -8,7 +8,7 @@ def read(fname):
 
 
 setup(
-    name="LSD",
+    name="LSD-Bubble",
     version=__version__,
     packages=find_packages(),
     zip_safe=False,
