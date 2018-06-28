@@ -12,7 +12,23 @@ def check_pre(v, g, order):
 
 
 def toposort(g):
-    """Do a topological ordering of the graph"""
+    """Do a topological ordering of the graph.
+    It does a lineare version of a deep first search.
+    The recusive version of the same algorithm would look like this::
+    
+        def toposort(g):
+            order = Order(g.artificial_source, g.artificial_sink)
+            rec_call(g.artificial_source, order, g, lambda v: check_pre(v, g.g, order))
+            return order
+    
+            
+        def rec_call(v, order, g, check_predecessor):
+            for child in g.successors(v):
+                if check_predecessor(child):
+                    order.add(child)
+                    rec_call(child, order, g, check_predecessor)
+    
+    """
     order = Order(g.artificial_source, g.artificial_sink)
     stack = [iter(g.successors(g.artificial_source))]
     while stack:

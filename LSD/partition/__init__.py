@@ -20,7 +20,10 @@ def get_strongly_connected_component(g):
 
 
 def create_auxiliary_graph(c, g):
-    """Create the auxiliary graph that have the same superbubbles than g."""
+    """Create the auxiliary graph that have the same superbubbles than g.
+    This function also connects every source to a and every sink to b.
+    This have the effect that every graph have exactly one source (a) and one sink (b).
+    So that the computation of outChild and outParent are much easier."""
     c.copy_graph(g)
     
     for v in c:
@@ -32,13 +35,14 @@ def create_auxiliary_graph(c, g):
 
 class AuxiliaryGraph:
     """The auxiliary graph representation."""
+
     
     def __init__(self, number):
         """Save the number of the graph."""
         self.vertices = set()
         self.number = number
-        self.artificial_sink = "artifical_sink_{num}".format(num=self.number)
-        self.artificial_source = "artifical_source_{num}".format(num=self.number)
+        self.artificial_sink = "artificial_sink_{num}".format(num=self.number)
+        self.artificial_source = "artificial_source_{num}".format(num=self.number)
         self.g = None
     
     def add(self, v):

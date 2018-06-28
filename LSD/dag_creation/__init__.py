@@ -21,7 +21,26 @@ def choose_root(c):
 
 def construct_dag(c):
     """Construct the DAG that contain the same week superbubbles as G.
-    In this procedure the DFS tree is constructed indirectly."""
+    In this procedure the DFS tree is constructed indirectly.
+    It does a lineare version of a deep first search.
+    The recusive version of the same algorithm would look like this::
+    
+        def construct_dag(c):
+            recursive_dag(c, g.artificial_source)
+            
+    
+        def recursive_dag(c, v):
+            c.set_color(v, GREY)
+            for child in c.successors(v):
+                if c.has_no_color(child):
+                    recursive_dag(g, child)
+                elif c.get_color(child) == GREY:
+                    c.remove_edge(v, child)
+                    c.connect2sink(v)
+                    c.connect2source(child)
+            c.set_color(v, BLACK)
+        
+    """
     stack = [(c.artificial_source, iter(c.successors(c.artificial_source)))]
     while stack:
         parent, children = stack[-1]
@@ -40,7 +59,8 @@ def construct_dag(c):
 
 
 def choose_random_root(c):
-    """Choose a arbitary root. The smallest in a compare"""
+    """Choose a arbitrary root.
+    To be deterministic the minimum vertex identifier is used"""
     r = min(c)
     c.connect2source(r)
 

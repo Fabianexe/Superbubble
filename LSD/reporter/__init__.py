@@ -1,9 +1,10 @@
-
+"""The different Reporter of superbubbles"""
 from abc import ABC, abstractmethod
 import time
 
 
 class Reporter(ABC):
+    """The abstract reporter class that every Reporter (and Filter) implements."""
     @abstractmethod
     def rep(self, dag):
         pass
@@ -14,6 +15,9 @@ class Reporter(ABC):
 
 
 class PrintReporter(Reporter):
+    """Simple print the Superbubble:
+    The superbubble <1,4> creates the output.
+    [1, 2, 3, 4]"""
     def rep(self, dag):
         print(dag)
     
@@ -22,6 +26,9 @@ class PrintReporter(Reporter):
 
 
 class PrintShortReporter(Reporter):
+    """Print the entrance and exit of the Superbubble.
+        The superbubble <1,4> creates the output:
+        <1,4>"""
     def rep(self, dag):
         print("<{ind},{out}>".format(ind=dag[0], out=dag[-1]))
     
@@ -30,6 +37,7 @@ class PrintShortReporter(Reporter):
 
 
 class CountReporter(Reporter):
+    """Count all Superbubble and print the number."""
     def __init__(self):
         self.sum = 0
     
@@ -41,6 +49,11 @@ class CountReporter(Reporter):
 
 
 class CompleteReporter(Reporter):
+    """Write a file with informations about the graph the detection time,
+    the number of superbubbles and a list of superbubbles.
+    Inspired by the output of SUPBUB.
+    The superbubble <1,4> creates the output:
+    <1,4>"""
     def __init__(self, g, path):
         self.t = time.time()
         self.head = "Vertices: {v}\nEdges: {e}\n".format(v=g.number_of_nodes(), e=g.number_of_edges())
@@ -62,6 +75,7 @@ class CompleteReporter(Reporter):
 
     
 class NullReporter(Reporter):
+    """Report nothing at all. Can be used for time test."""
     def rep(self, dag):
         pass
     

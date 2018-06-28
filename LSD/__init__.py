@@ -17,7 +17,31 @@ logger = None
 
 
 def main():
-    """The main function that loads the commands."""
+    """The main function that does the superbubble detection.
+    
+    The detection is done with this code::
+    
+        dag, scc = partition.get_strongly_connected_component(g)
+        for c in scc:
+            partition.create_auxiliary_graph(c, g)
+            if not (c.source_connected() or c.sink_connected()):
+                dag_creation.choose_random_root(c)
+                # includes tree construction
+                dag_creation.construct_sung_graph(c)
+                order = topological_sorting.toposort(c)
+                # Use ComplexFilter for the sung superbubble filtering after detection
+                detecter.dag_superbubble(c, order, filter.SungFilter(rep, order))
+            else:
+                dag_creation.choose_root(c)
+                # includes tree construction
+                dag_creation.construct_dag(c)
+                order = topological_sorting.toposort(c)
+                detecter.dag_superbubble(c, order, rep)
+        partition.create_auxiliary_graph(dag, g)
+        order = topological_sorting.toposort(dag)
+        detecter.dag_superbubble(dag, order, rep)
+    
+    """
     global logger
     parser = ArgumentParser(prog='lsd', description="A simple tool to detect superbubbles.")
 

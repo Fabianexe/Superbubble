@@ -2,7 +2,7 @@ from LSD.reporter import Reporter
 
 
 class Filter(Reporter):
-    """Abstract filter."""
+    """Abstract filter class that every Filter implements."""
     def __init__(self, reporter):
         self.reporter = reporter
         
