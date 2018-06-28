@@ -1,0 +1,221 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>LSD.partition &#8212; Linear Superbubble Detecter 1.0 documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for LSD.partition</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">networkx</span> <span class="k">import</span> <span class="n">strongly_connected_components</span>
+
+
+<div class="viewcode-block" id="get_strongly_connected_component"><a class="viewcode-back" href="../../partition.html#LSD.partition.get_strongly_connected_component">[docs]</a><span class="k">def</span> <span class="nf">get_strongly_connected_component</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create the SCC components.&quot;&quot;&quot;</span>
+    <span class="n">sccs</span> <span class="o">=</span> <span class="n">strongly_connected_components</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="n">dag</span> <span class="o">=</span> <span class="n">AuxiliaryGraph</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">non_singelton</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">scc</span> <span class="ow">in</span> <span class="n">sccs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">scc</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">or</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">scc</span><span class="p">))</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">scc</span><span class="p">)))):</span>
+            <span class="n">nsscc</span> <span class="o">=</span> <span class="n">AuxiliaryGraph</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+            <span class="n">n</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">scc</span><span class="p">:</span>
+                <span class="n">nsscc</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="n">non_singelton</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">nsscc</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dag</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">scc</span><span class="p">)))</span>
+    <span class="k">return</span> <span class="n">dag</span><span class="p">,</span> <span class="n">non_singelton</span></div>
+
+
+<div class="viewcode-block" id="create_auxiliary_graph"><a class="viewcode-back" href="../../partition.html#LSD.partition.create_auxiliary_graph">[docs]</a><span class="k">def</span> <span class="nf">create_auxiliary_graph</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Create the auxiliary graph that have the same superbubbles than g.</span>
+<span class="sd">    This function also connects every source to a and every sink to b.</span>
+<span class="sd">    This have the effect that every graph have exactly one source (a) and one sink (b).</span>
+<span class="sd">    So that the computation of outChild and outParent are much easier.&quot;&quot;&quot;</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">copy_graph</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">connect2source</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">c</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="ow">or</span> <span class="n">c</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">c</span><span class="o">.</span><span class="n">connect2sink</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="AuxiliaryGraph"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph">[docs]</a><span class="k">class</span> <span class="nc">AuxiliaryGraph</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;The auxiliary graph representation.&quot;&quot;&quot;</span>
+
+    
+<div class="viewcode-block" id="AuxiliaryGraph.__init__"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Save the number of the graph.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number</span> <span class="o">=</span> <span class="n">number</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artificial_sink</span> <span class="o">=</span> <span class="s2">&quot;artificial_sink_</span><span class="si">{num}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">artificial_source</span> <span class="o">=</span> <span class="s2">&quot;artificial_source_</span><span class="si">{num}</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">num</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">number</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="kc">None</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.add"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add a vertex to the axiliary graph.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.copy_graph"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.copy_graph">[docs]</a>    <span class="k">def</span> <span class="nf">copy_graph</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Create with the vertices a induced subgraph. Add also a and b.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span> <span class="o">=</span> <span class="n">g</span><span class="o">.</span><span class="n">subgraph</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.connect2sink"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.connect2sink">[docs]</a>    <span class="k">def</span> <span class="nf">connect2sink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connect v with a&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.connect2source"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.connect2source">[docs]</a>    <span class="k">def</span> <span class="nf">connect2source</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Connect v with b&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.in_degree"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.in_degree">[docs]</a>    <span class="k">def</span> <span class="nf">in_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the in degree of a vertex.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.out_degree"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.out_degree">[docs]</a>    <span class="k">def</span> <span class="nf">out_degree</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the out degree of a vertex&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="n">v</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.source_connected"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.source_connected">[docs]</a>    <span class="k">def</span> <span class="nf">source_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a us connected.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.sink_connected"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.sink_connected">[docs]</a>    <span class="k">def</span> <span class="nf">sink_connected</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if b is connected.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">0</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.remove_edge"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.remove_edge">[docs]</a>    <span class="k">def</span> <span class="nf">remove_edge</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Remove an edge from f to t from the graph.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">remove_edge</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.successors"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.successors">[docs]</a>    <span class="k">def</span> <span class="nf">successors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all successors of a vertex.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">v</span><span class="p">))</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.predecessors"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.predecessors">[docs]</a>    <span class="k">def</span> <span class="nf">predecessors</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all predeccessors of a vertex.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">v</span><span class="p">))</span></div>
+    
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">nodes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get all vertices of a graph (including a and b).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">nodes</span>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.set_color"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.set_color">[docs]</a>    <span class="k">def</span> <span class="nf">set_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">c</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the color of v to c.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.get_color"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.get_color">[docs]</a>    <span class="k">def</span> <span class="nf">get_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the color of v.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">v</span><span class="p">][</span><span class="s1">&#39;c&#39;</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.has_no_color"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.has_no_color">[docs]</a>    <span class="k">def</span> <span class="nf">has_no_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Check if a vertex have no color.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="s1">&#39;c&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">g</span><span class="o">.</span><span class="n">node</span><span class="p">[</span><span class="n">v</span><span class="p">]</span></div>
+    
+<div class="viewcode-block" id="AuxiliaryGraph.__iter__"><a class="viewcode-back" href="../../partition.html#LSD.partition.AuxiliaryGraph.__iter__">[docs]</a>    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Iterate over the vertices of the graph (exluding a and b).&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">vertices</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">Linear Superbubble Detecter</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../LSD.html">LSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../dag_creation.html">LSD.dag_creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../topological_sorting.html">LSD.topological_sorting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../detecter.html">LSD.detecter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../filter.html">LSD.filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../reporter.html">LSD.reporter</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  <li><a href="../LSD.html">LSD</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Fabian Gärtner.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

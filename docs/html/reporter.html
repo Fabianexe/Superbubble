@@ -1,0 +1,156 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>LSD.reporter &#8212; Linear Superbubble Detecter 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="LSD.filter" href="filter.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-LSD.reporter">
+<span id="lsd-reporter"></span><h1>LSD.reporter<a class="headerlink" href="#module-LSD.reporter" title="Permalink to this headline">¶</a></h1>
+<p>The different Reporter of superbubbles</p>
+<dl class="class">
+<dt id="LSD.reporter.CompleteReporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">CompleteReporter</code><span class="sig-paren">(</span><em>g</em>, <em>path</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/reporter.html#CompleteReporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.CompleteReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write a file with informations about the graph the detection time,
+the number of superbubbles and a list of superbubbles.
+Inspired by the output of SUPBUB.
+The superbubble &lt;1,4&gt; creates the output:
+&lt;1,4&gt;</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="LSD.reporter.CountReporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">CountReporter</code><a class="reference internal" href="_modules/LSD/reporter.html#CountReporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.CountReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Count all Superbubble and print the number.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="LSD.reporter.NullReporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">NullReporter</code><a class="reference internal" href="_modules/LSD/reporter.html#NullReporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.NullReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Report nothing at all. Can be used for time test.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="LSD.reporter.PrintReporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">PrintReporter</code><a class="reference internal" href="_modules/LSD/reporter.html#PrintReporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.PrintReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple print the Superbubble:
+The superbubble &lt;1,4&gt; creates the output.
+[1, 2, 3, 4]</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="LSD.reporter.PrintShortReporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">PrintShortReporter</code><a class="reference internal" href="_modules/LSD/reporter.html#PrintShortReporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.PrintShortReporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print the entrance and exit of the Superbubble.
+The superbubble &lt;1,4&gt; creates the output:
+&lt;1,4&gt;</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="LSD.reporter.Reporter">
+<em class="property">class </em><code class="descclassname">LSD.reporter.</code><code class="descname">Reporter</code><a class="reference internal" href="_modules/LSD/reporter.html#Reporter"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.reporter.Reporter" title="Permalink to this definition">¶</a></dt>
+<dd><p>The abstract reporter class that every Reporter (and Filter) implements.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Linear Superbubble Detecter</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LSD.html">LSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_creation.html">LSD.dag_creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sorting.html">LSD.topological_sorting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detecter.html">LSD.detecter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">LSD.filter</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LSD.reporter</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="filter.html" title="previous chapter">LSD.filter</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Fabian Gärtner.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/reporter.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,140 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>LSD.detecter &#8212; Linear Superbubble Detecter 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="LSD.filter" href="filter.html" />
+    <link rel="prev" title="LSD.topological_sorting" href="topological_sorting.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-LSD.detecter">
+<span id="lsd-detecter"></span><h1>LSD.detecter<a class="headerlink" href="#module-LSD.detecter" title="Permalink to this headline">¶</a></h1>
+<p>The package to detect superbubbles in a DAG</p>
+<dl class="class">
+<dt id="LSD.detecter.Stack">
+<em class="property">class </em><code class="descclassname">LSD.detecter.</code><code class="descname">Stack</code><a class="reference internal" href="_modules/LSD/detecter.html#Stack"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.detecter.Stack" title="Permalink to this definition">¶</a></dt>
+<dd><p>A simple stack implementation that return None when the stack is empty.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="LSD.detecter.dag_superbubble">
+<code class="descclassname">LSD.detecter.</code><code class="descname">dag_superbubble</code><span class="sig-paren">(</span><em>g</em>, <em>order</em>, <em>reporter</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/detecter.html#dag_superbubble"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.detecter.dag_superbubble" title="Permalink to this definition">¶</a></dt>
+<dd><p>Detect all superbubbles in a DAG.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="LSD.detecter.out_child">
+<code class="descclassname">LSD.detecter.</code><code class="descname">out_child</code><span class="sig-paren">(</span><em>v</em>, <em>g</em>, <em>order</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/detecter.html#out_child"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.detecter.out_child" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the outChild value of an vertex.
+Note that by construction every vertex beside b have a successor.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="LSD.detecter.out_parent">
+<code class="descclassname">LSD.detecter.</code><code class="descname">out_parent</code><span class="sig-paren">(</span><em>v</em>, <em>g</em>, <em>order</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/detecter.html#out_parent"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.detecter.out_parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate the outParent value of an vertex.
+Note that by construction every vertex beside a have a predecessor.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Linear Superbubble Detecter</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="LSD.html">LSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_creation.html">LSD.dag_creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sorting.html">LSD.topological_sorting</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">LSD.detecter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">LSD.filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporter.html">LSD.reporter</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="topological_sorting.html" title="previous chapter">LSD.topological_sorting</a></li>
+      <li>Next: <a href="filter.html" title="next chapter">LSD.filter</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Fabian Gärtner.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/detecter.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

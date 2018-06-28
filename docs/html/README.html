@@ -1,0 +1,149 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Linear Superbubble Detector &#8212; Linear Superbubble Detecter 1.0 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="linear-superbubble-detector">
+<h1>Linear Superbubble Detector<a class="headerlink" href="#linear-superbubble-detector" title="Permalink to this headline">¶</a></h1>
+<img alt="https://raw.githubusercontent.com/Fabianexe/Superbubble/master/logo.png" src="https://raw.githubusercontent.com/Fabianexe/Superbubble/master/logo.png" />
+<div class="section" id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h2>
+<p>This project gives the reference implementation of the Linear Superbubble Dector (LSD).</p>
+</div>
+<div class="section" id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li>Detect superbubbles in linear time</li>
+<li>Uses <a class="reference external" href="https://networkx.github.io">NetworkX</a>  as graph library</li>
+<li>Can load plenty file formats (everything that <a class="reference external" href="https://networkx.github.io/documentation/stable/reference/readwrite/index.html">NetworkX can load</a> )</li>
+<li>Have different ways to report the superbubbles</li>
+<li>Simple and clean code</li>
+<li>Simple to understand and reimplement</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<p>The simples way to install is using pip:</p>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">LSD</span>
+</pre></div>
+</div>
+<p>You can also download the source from <a class="reference external" href="https://github.com/Fabianexe/Superbubble">https://github.com/Fabianexe/Superbubble</a> and run the make script to install the package.
+These needs that <a class="reference external" href="https://pypi.python.org/pypi/setuptools">setuptools</a> are installed.</p>
+</div>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The programms needs only a path to a graph file to work:</p>
+<blockquote>
+<div>lsd <em>path</em></div></blockquote>
+<p>If as input format not edgelist is used give the format with the -f parameter</p>
+<blockquote>
+<div>lsd <em>path</em> -f gml</div></blockquote>
+<p>If you want a different reporting format use -r</p>
+<blockquote>
+<div>lsd <em>path</em> -r count</div></blockquote>
+<p>If you want not to detect superbubbles but week superbubbles use –week:</p>
+<blockquote>
+<div>lsd <em>path</em> –week</div></blockquote>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">Linear Superbubble Detecter</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="LSD.html">LSD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dag_creation.html">LSD.dag_creation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="topological_sorting.html">LSD.topological_sorting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="detecter.html">LSD.detecter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filter.html">LSD.filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="reporter.html">LSD.reporter</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Fabian Gärtner.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.6.3</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/README.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
