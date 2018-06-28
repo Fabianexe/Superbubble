@@ -28,7 +28,7 @@ def dag_superbubble(g, order, reporter):
     stack = Stack()
     out_parent_map = {None: -3}
     t = None
-    for k in range(len(order)-1, -1, -1):
+    for k in range(order.n-1, -1, -1):
         v = order[k]
         child = out_child(v, g, order)
         if child == k+1:

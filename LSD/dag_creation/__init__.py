@@ -10,12 +10,12 @@ BLACK = 2
 
 def choose_root(c):
     """Choose a or a b'' as root. The root is connected with a"""
-    if (c.source_connected()):
+    if c.source_connected():
         pass
     else:
-        for predecessor in c.predecessors(c.artificial_sink):
+        for predecessor in c.predecessors(c.b):
             for successor in c.successors(predecessor):
-                if successor != c.artificial_sink:
+                if successor != c.b:
                     c.connect2source(successor)
 
 
@@ -26,7 +26,7 @@ def construct_dag(c):
     The recusive version of the same algorithm would look like this::
     
         def construct_dag(c):
-            recursive_dag(c, g.artificial_source)
+            recursive_dag(c, g.a)
             
     
         def recursive_dag(c, v):
@@ -41,7 +41,7 @@ def construct_dag(c):
             c.set_color(v, BLACK)
         
     """
-    stack = [(c.artificial_source, iter(c.successors(c.artificial_source)))]
+    stack = [(c.a, iter(c.successors(c.a)))]
     while stack:
         parent, children = stack[-1]
         try:
@@ -68,7 +68,7 @@ def choose_random_root(c):
 def construct_sung_graph(c):
     """Construct the sung graph. That is also a DAG.
     In this procedure the DFS tree is constructed indirectly."""
-    r = c.successors(c.artificial_source)[0]
+    r = c.successors(c.a)[0]
     c.set_color(r, GREY)
     stack = [(r, iter(c.successors(r)))]
     while stack:

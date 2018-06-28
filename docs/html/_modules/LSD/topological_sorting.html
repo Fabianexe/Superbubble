@@ -58,8 +58,8 @@
 <span class="sd">    The recusive version of the same algorithm would look like this::</span>
 <span class="sd">    </span>
 <span class="sd">        def toposort(g):</span>
-<span class="sd">            order = Order(g.artificial_source, g.artificial_sink)</span>
-<span class="sd">            rec_call(g.artificial_source, order, g, lambda v: check_pre(v, g.g, order))</span>
+<span class="sd">            order = Order(g.a, g.b)</span>
+<span class="sd">            rec_call(g.a, order, g, lambda v: check_pre(v, g.g, order))</span>
 <span class="sd">            return order</span>
 <span class="sd">    </span>
 <span class="sd">            </span>
@@ -70,13 +70,13 @@
 <span class="sd">                    rec_call(child, order, g, check_predecessor)</span>
 <span class="sd">    </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">)</span>
-    <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">))]</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[</span><span class="nb">iter</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">))]</span>
     <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
         <span class="n">children</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">child</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
-            <span class="k">if</span> <span class="n">check_pre</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">check_pre</span><span class="p">(</span><span class="n">child</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">order</span><span class="p">):</span>
                 <span class="n">order</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">child</span><span class="p">)</span>
                 <span class="n">stack</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">child</span><span class="p">)))</span>
         <span class="k">except</span> <span class="ne">StopIteration</span><span class="p">:</span>
@@ -89,30 +89,33 @@
 <span class="sd">    Get a vertex on an arbitrary position in O(1).</span>
 <span class="sd">    Get the position of an arbitrary vertex in O(1).&quot;&quot;&quot;</span>
     
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">sink</span><span class="p">):</span>
+<div class="viewcode-block" id="Order.__init__"><a class="viewcode-back" href="../../topological_sorting.html#LSD.topological_sorting.Order.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">sink</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Init the order set source position -1 and sink and None position to infinity &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">revers</span> <span class="o">=</span> <span class="p">{</span><span class="n">source</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sink</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">,</span> <span class="kc">None</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">inf</span><span class="p">}</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">=</span> <span class="mi">0</span></div>
     
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="Order.add"><a class="viewcode-back" href="../../topological_sorting.html#LSD.topological_sorting.Order.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Add an element to the end of the order&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">revers</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span>
-    
-    <span class="k">def</span> <span class="nf">__len__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pos</span> <span class="o">+=</span> <span class="mi">1</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">n</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get the length of the order.&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">)</span>
     
-    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">[</span><span class="n">item</span><span class="p">]</span>
+<div class="viewcode-block" id="Order.__getitem__"><a class="viewcode-back" href="../../topological_sorting.html#LSD.topological_sorting.Order.__getitem__">[docs]</a>    <span class="k">def</span> <span class="nf">__getitem__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get element at position item&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="p">[</span><span class="n">item</span><span class="p">]</span></div>
     
-    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">order</span><span class="o">.</span><span class="fm">__iter__</span><span class="p">()</span>
-    
-    <span class="k">def</span> <span class="nf">get_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<div class="viewcode-block" id="Order.get_position"><a class="viewcode-back" href="../../topological_sorting.html#LSD.topological_sorting.Order.get_position">[docs]</a>    <span class="k">def</span> <span class="nf">get_position</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Get position of element v. If v not contained return -2&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">revers</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
         <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
-            <span class="k">return</span> <span class="o">-</span><span class="mi">2</span></div>
+            <span class="k">return</span> <span class="o">-</span><span class="mi">2</span></div></div>
 </pre></div>
 
           </div>
@@ -134,6 +137,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../LSD.html">LSD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auxiliary_graph.html">LSD.auxiliary_graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dag_creation.html">LSD.dag_creation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../topological_sorting.html">LSD.topological_sorting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../detecter.html">LSD.detecter</a></li>

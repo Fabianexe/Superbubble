@@ -41,7 +41,7 @@ class SungFilter(Filter):
 
 class WeekFilter(Filter):
     """The filter that to get only superbubbles and discards week superbubbles."""
-    def __init__(self,reporter, g):
+    def __init__(self, reporter, g):
         super().__init__(reporter)
         self.g = g
 

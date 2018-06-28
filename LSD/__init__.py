@@ -61,7 +61,6 @@ def main():
     repo.add_argument("-o", "--outpath", action='store', dest="outpath",
                       help="The path to the output file. Is used by complete reporter.", default="complete.out")
     
-
     args = parser.parse_args()
 
     # Logger stuff
@@ -78,12 +77,10 @@ def main():
         logger.addHandler(ch)
     logger.debug("Logging startet")
     
-    
     # Load graph
-    logger.debug("Load file in {format} from path: {path}.".format(format=args.format,path=args.path))
+    logger.debug("Load file in {format} from path: {path}.".format(format=args.format, path=args.path))
     g = load(args.path, args.format)
     logger.debug("Graph loaded")
-    
     
     # Report type stuff 1
     rep = None
@@ -113,7 +110,7 @@ def main():
     dag, scc = get_strongly_connected_component(g)
     logger.debug("Iterate over SCCs.")
     for c in scc:
-        logger.debug("Start with  SCCs " + str(c.number))
+        logger.debug("Start with  SCCs " + str(c.nr))
         logger.debug("Create auxiliary graph")
         create_auxiliary_graph(c, g)
         if not (c.source_connected() or c.sink_connected()):
@@ -145,7 +142,6 @@ def main():
     order = toposort(dag)
     logger.debug("Detect superbubbles")
     dag_superbubble(dag, order, rep)
-
 
     # Report type stuff 2
     logger.debug("Finalize output.")

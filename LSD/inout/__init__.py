@@ -43,32 +43,32 @@ def load_gexf(path):
 
 
 def load_gml(path):
-    return nx.read_gml
+    return nx.read_gml(path, create_using=nx.DiGraph())
 
 
 def load_gpickle(path):
-    return nx.read_gpickle
+    return nx.read_gpickle(path, create_using=nx.DiGraph())
 
 
 def load_graph6(path):
-    return nx.read_graph6
+    return nx.read_graph6(path, create_using=nx.DiGraph())
 
 
 def load_graphml(path):
-    return nx.read_graphml
+    return nx.read_graphml(path, create_using=nx.DiGraph())
 
 
 def load_leda(path):
-    return nx.read_leda
+    return nx.read_leda(path, create_using=nx.DiGraph())
 
 
 def load_pajek(path):
-    return nx.read_pajek
+    return nx.read_pajek(path, create_using=nx.DiGraph())
 
 
 def load_sparse6(path):
-    return nx.read_sparse6
+    return nx.read_sparse6(path, create_using=nx.DiGraph())
 
 
 def load_yaml(path):
-    return nx.read_yaml
+    return nx.read_yaml(path, create_using=nx.DiGraph())

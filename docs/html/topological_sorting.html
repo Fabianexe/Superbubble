@@ -48,6 +48,36 @@
 <dd><p>A order representation.
 Get a vertex on an arbitrary position in O(1).
 Get the position of an arbitrary vertex in O(1).</p>
+<dl class="method">
+<dt id="LSD.topological_sorting.Order.__getitem__">
+<code class="descname">__getitem__</code><span class="sig-paren">(</span><em>item</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/topological_sorting.html#Order.__getitem__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.topological_sorting.Order.__getitem__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get element at position item</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="LSD.topological_sorting.Order.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>source</em>, <em>sink</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/topological_sorting.html#Order.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.topological_sorting.Order.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Init the order set source position -1 and sink and None position to infinity</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="LSD.topological_sorting.Order.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/topological_sorting.html#Order.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.topological_sorting.Order.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an element to the end of the order</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="LSD.topological_sorting.Order.get_position">
+<code class="descname">get_position</code><span class="sig-paren">(</span><em>v</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/LSD/topological_sorting.html#Order.get_position"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#LSD.topological_sorting.Order.get_position" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get position of element v. If v not contained return -2</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="LSD.topological_sorting.Order.n">
+<code class="descname">n</code><a class="headerlink" href="#LSD.topological_sorting.Order.n" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get the length of the order.</p>
+</dd></dl>
+
 </dd></dl>
 
 <dl class="function">
@@ -63,8 +93,8 @@ Get the position of an arbitrary vertex in O(1).</p>
 It does a lineare version of a deep first search.
 The recusive version of the same algorithm would look like this:</p>
 <div class="highlight-default"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">toposort</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
-    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">)</span>
-    <span class="n">rec_call</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">check_pre</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">order</span><span class="p">))</span>
+    <span class="n">order</span> <span class="o">=</span> <span class="n">Order</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">b</span><span class="p">)</span>
+    <span class="n">rec_call</span><span class="p">(</span><span class="n">g</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="n">order</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">check_pre</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">g</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">order</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">order</span>
 
     
@@ -99,6 +129,7 @@ The recusive version of the same algorithm would look like this:</p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="LSD.html">LSD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="auxiliary_graph.html">LSD.auxiliary_graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="dag_creation.html">LSD.dag_creation</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">LSD.topological_sorting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="detecter.html">LSD.detecter</a></li>

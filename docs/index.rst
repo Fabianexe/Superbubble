@@ -7,6 +7,7 @@
 
    LSD
    partition
+   auxiliary_graph
    dag_creation
    topological_sorting
    detecter

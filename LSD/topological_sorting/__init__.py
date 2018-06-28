@@ -17,8 +17,8 @@ def toposort(g):
     The recusive version of the same algorithm would look like this::
     
         def toposort(g):
-            order = Order(g.artificial_source, g.artificial_sink)
-            rec_call(g.artificial_source, order, g, lambda v: check_pre(v, g.g, order))
+            order = Order(g.a, g.b)
+            rec_call(g.a, order, g, lambda v: check_pre(v, g.g, order))
             return order
     
             
@@ -29,13 +29,13 @@ def toposort(g):
                     rec_call(child, order, g, check_predecessor)
     
     """
-    order = Order(g.artificial_source, g.artificial_sink)
-    stack = [iter(g.successors(g.artificial_source))]
+    order = Order(g.a, g.b)
+    stack = [iter(g.successors(g.a))]
     while stack:
         children = stack[-1]
         try:
             child = next(children)
-            if check_pre(child, g.g, order):
+            if check_pre(child, g, order):
                 order.add(child)
                 stack.append(iter(g.successors(child)))
         except StopIteration:
@@ -49,25 +49,28 @@ class Order:
     Get the position of an arbitrary vertex in O(1)."""
     
     def __init__(self, source, sink):
+        """Init the order set source position -1 and sink and None position to infinity """
         self.order = []
         self.revers = {source: -1, sink: math.inf, None: math.inf}
         self.pos = 0
     
     def add(self, v):
+        """Add an element to the end of the order"""
         self.order.append(v)
         self.revers[v] = self.pos
         self.pos += 1
-    
-    def __len__(self):
+
+    @property
+    def n(self):
+        """Get the length of the order."""
         return len(self.order)
     
     def __getitem__(self, item):
+        """Get element at position item"""
         return self.order[item]
     
-    def __iter__(self):
-        return self.order.__iter__()
-    
     def get_position(self, v):
+        """Get position of element v. If v not contained return -2"""
         try:
             return self.revers[v]
         except KeyError:

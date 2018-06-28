@@ -51,12 +51,12 @@
 
 <div class="viewcode-block" id="choose_root"><a class="viewcode-back" href="../../dag_creation.html#LSD.dag_creation.choose_root">[docs]</a><span class="k">def</span> <span class="nf">choose_root</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Choose a or a b&#39;&#39; as root. The root is connected with a&quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">source_connected</span><span class="p">()):</span>
+    <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">source_connected</span><span class="p">():</span>
         <span class="k">pass</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">predecessor</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">predecessors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">):</span>
             <span class="k">for</span> <span class="n">successor</span> <span class="ow">in</span> <span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">predecessor</span><span class="p">):</span>
-                <span class="k">if</span> <span class="n">successor</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">artificial_sink</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">successor</span> <span class="o">!=</span> <span class="n">c</span><span class="o">.</span><span class="n">b</span><span class="p">:</span>
                     <span class="n">c</span><span class="o">.</span><span class="n">connect2source</span><span class="p">(</span><span class="n">successor</span><span class="p">)</span></div>
 
 
@@ -67,7 +67,7 @@
 <span class="sd">    The recusive version of the same algorithm would look like this::</span>
 <span class="sd">    </span>
 <span class="sd">        def construct_dag(c):</span>
-<span class="sd">            recursive_dag(c, g.artificial_source)</span>
+<span class="sd">            recursive_dag(c, g.a)</span>
 <span class="sd">            </span>
 <span class="sd">    </span>
 <span class="sd">        def recursive_dag(c, v):</span>
@@ -82,7 +82,7 @@
 <span class="sd">            c.set_color(v, BLACK)</span>
 <span class="sd">        </span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">stack</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">,</span> <span class="nb">iter</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">)))]</span>
+    <span class="n">stack</span> <span class="o">=</span> <span class="p">[(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">,</span> <span class="nb">iter</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">)))]</span>
     <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
         <span class="n">parent</span><span class="p">,</span> <span class="n">children</span> <span class="o">=</span> <span class="n">stack</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="k">try</span><span class="p">:</span>
@@ -109,7 +109,7 @@
 <div class="viewcode-block" id="construct_sung_graph"><a class="viewcode-back" href="../../dag_creation.html#LSD.dag_creation.construct_sung_graph">[docs]</a><span class="k">def</span> <span class="nf">construct_sung_graph</span><span class="p">(</span><span class="n">c</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Construct the sung graph. That is also a DAG.</span>
 <span class="sd">    In this procedure the DFS tree is constructed indirectly.&quot;&quot;&quot;</span>
-    <span class="n">r</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">artificial_source</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">a</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">c</span><span class="o">.</span><span class="n">set_color</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">GREY</span><span class="p">)</span>
     <span class="n">stack</span> <span class="o">=</span> <span class="p">[(</span><span class="n">r</span><span class="p">,</span> <span class="nb">iter</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">successors</span><span class="p">(</span><span class="n">r</span><span class="p">)))]</span>
     <span class="k">while</span> <span class="n">stack</span><span class="p">:</span>
@@ -154,6 +154,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../LSD.html">LSD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../partition.html">LSD.partition</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../auxiliary_graph.html">LSD.auxiliary_graph</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../dag_creation.html">LSD.dag_creation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../topological_sorting.html">LSD.topological_sorting</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../detecter.html">LSD.detecter</a></li>
