@@ -9,6 +9,7 @@ This project gives the reference implementation of the Linear Superbubble Dector
 
 .. _`NetworkX`: https://networkx.github.io
 .. _`NetworkX can load`: https://networkx.github.io/documentation/stable/reference/readwrite/index.html
+
 Features
 --------
 - Detect superbubbles in linear time
