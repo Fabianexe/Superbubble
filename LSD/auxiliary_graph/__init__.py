@@ -41,7 +41,7 @@ class AuxiliaryGraph:
         return self.g.out_degree(v)
     
     def source_connected(self):
-        """Check if a us connected."""
+        """Check if a is connected."""
         return self.g.out_degree(self.artificial_source) != 0
     
     def sink_connected(self):
@@ -95,3 +95,10 @@ class AuxiliaryGraph:
     def __iter__(self):
         """Iterate over the vertices of the graph (exluding a and b)."""
         return self.vertices.__iter__()
+    
+    def __str__(self):
+        s = ", ".join(self.nodes)
+        s += "\n"
+        s += ", ".join(str(s) for s in self.g.edges)
+        s += "\n"
+        return s

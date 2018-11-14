@@ -18,10 +18,11 @@ class Filter(Reporter):
 
 class SungFilter(Filter):
     """The sung filter to get only the right superbubbles."""
-    def __init__(self, reporter, order):
+    def __init__(self, reporter, order, c=None):
         super().__init__(reporter)
         self.dags = set()
         self.order = order
+        self.c = c
     
     def rep(self, dag):
         source = str(dag[0])
@@ -33,6 +34,13 @@ class SungFilter(Filter):
                 for i in range(len(dag)):
                     if dag[i].endswith("_2"):
                         dag[i] = dag[i][:-2]
+                if self.c is not None:
+                    for i in range(0, len(dag)-1):
+                        if self.c.b in self.c.successors(dag[i] + "_2"):
+                            return
+                    for i in range(1, len(dag)):
+                        if self.c.a in self.c.predecessors(dag[i]):
+                            return
                 self.report(dag)
         else:
             if (source, sink) in self.dags:

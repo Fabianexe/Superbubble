@@ -75,7 +75,10 @@ def construct_sung_graph(c):
         parent, children = stack[-1]
         try:
             child = next(children)
-            if c.has_no_color(child):
+            if child == c.b:
+                c.g.add_edge("{v}_2".format(v=parent), c.b)
+                c.g.remove_edge(parent, child)
+            elif c.has_no_color(child):
                 c.set_color(child, GREY)
                 stack.append((child, iter(c.successors(child))))
                 c.g.add_edge("{v}_2".format(v=parent), "{v}_2".format(v=child))

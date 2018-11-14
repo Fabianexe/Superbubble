@@ -60,4 +60,3 @@ class Stack:
         if len(self.list) == 0:
             return None
         return self.list.pop()
-

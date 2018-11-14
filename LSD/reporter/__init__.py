@@ -55,23 +55,25 @@ class CompleteReporter(Reporter):
     The superbubble <1,4> creates the output:
     <1,4>"""
     def __init__(self, g, path):
-        self.t = time.time()
         self.head = "Vertices: {v}\nEdges: {e}\n".format(v=g.number_of_nodes(), e=g.number_of_edges())
-        self.body = ""
+        self.body = []
         self.sum = 0
         self.path = path
+        self.t = time.time()
     
     def rep(self, dag):
-        self.body += "<{ind},{out}>\n".format(ind=dag[0], out=dag[-1])
+        self.body.append((dag[0], dag[-1]))
         self.sum += 1
     
     def fin(self):
         self.head += "Elapsed time for processing: {t} secs.\nNumber of superbubbles found: {sum}.\n"\
             .format(t=time.time()-self.t, sum=self.sum)
-        
         f = open(self.path, "w")
         f.write(self.head)
-        f.write(self.body)
+        self.body.sort()
+        for dag in self.body:
+            f.write("<{ind},{out}>\n".format(ind=dag[0], out=dag[-1]))
+        
 
     
 class NullReporter(Reporter):

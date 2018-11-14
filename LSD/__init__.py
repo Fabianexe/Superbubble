@@ -1,5 +1,7 @@
 """The functions to handle the main function"""
 from argparse import ArgumentParser
+
+from LSD.detecter.brankovic import super_bubble_brankovice
 from LSD.inout import load
 from LSD.partition import get_strongly_connected_component, create_auxiliary_graph
 from LSD.dag_creation import construct_dag, choose_root, choose_random_root, construct_sung_graph
@@ -10,7 +12,7 @@ from LSD.topological_sorting import toposort
 import logging
 
 
-__version__ = "1.0"
+__version__ = "1.1"
 """The version of the package"""
 
 logger = None
@@ -53,6 +55,8 @@ def main():
                         default="edgelist", choices=["edgelist", "adjlist", "gexf", "gml", "gpickle", "graph6",
                                                      "graphml", "leda", "pajek", "sparse6", "yaml"])
     parser.add_argument('--week', action='store_true', dest="week", help="Detect week superbubbles.")
+    parser.add_argument('--sung', action='store_true', dest="sung", help="Use sung graph instead.")
+    parser.add_argument('--brankovic', action='store_true', dest="brankovic", help="Uses brankovic detector")
 
     repo = parser.add_argument_group("Reporter", "The output reporter.")
     repo.add_argument('-r', '--reporter', action='store',  dest="reporter",
@@ -101,6 +105,21 @@ def main():
         logger.debug("Use null reporter.")
         rep = NullReporter()
 
+    # Use brankovic
+    if args.brankovic:
+        detect = super_bubble_brankovice
+    else:
+        detect = dag_superbubble
+    
+    # Use sung
+    if args.sung:
+        construct = construct_sung_graph
+        
+        detect2 = lambda c2, order2, rep2: detect(c2, order2, SungFilter(rep2, order2, c2))
+    else:
+        construct = construct_dag
+        detect2 = detect
+
     # Only superbubbles and not week superbubbles
     if not args.week:
         rep = WeekFilter(rep, g)
@@ -124,24 +143,24 @@ def main():
             order = toposort(c)
             logger.debug("Detect superbubbles")
             # Use ComplexFilter for the sung superbubble filtering after detection
-            dag_superbubble(c, order, SungFilter(rep, order))
+            detect(c, order, SungFilter(rep, order))
         else:
             logger.debug("Use gaertner algorithm")
             logger.debug("Choose root")
             choose_root(c)
             logger.debug("Construct DAG")
             # includes tree construction
-            construct_dag(c)
+            construct(c)
             logger.debug("Construct topological ordering")
             order = toposort(c)
             logger.debug("Detect superbubbles")
-            dag_superbubble(c, order, rep)
+            detect2(c, order, rep)
     logger.debug("Create auxiliary graph for DAG")
     create_auxiliary_graph(dag, g)
     logger.debug("Construct topological ordering")
     order = toposort(dag)
     logger.debug("Detect superbubbles")
-    dag_superbubble(dag, order, rep)
+    detect(dag, order, rep)
 
     # Report type stuff 2
     logger.debug("Finalize output.")
