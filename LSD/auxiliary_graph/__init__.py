@@ -18,6 +18,9 @@ class AuxiliaryGraph:
         """Add a vertex to the axiliary graph."""
         self.vertices.add(v)
     
+    def add_edge(self,v, v2):
+        self.g.add_edge(v, v2)
+    
     def copy_graph(self, g):
         """Create with the vertices a induced subgraph. Add also a and b."""
         self.g = g.subgraph(self.vertices).copy()
@@ -80,17 +83,17 @@ class AuxiliaryGraph:
         """Get the number of this part."""
         return self.number
     
-    def set_color(self, v, c):
+    def set_color(self, v, c, add=""):
         """Set the color of v to c."""
-        self.g.node[v]['c'] = c
+        self.g.node[v]['c'+add] = c
     
-    def get_color(self, v):
+    def get_color(self, v, add=""):
         """Get the color of v."""
-        return self.g.node[v]['c']
+        return self.g.node[v]['c'+add]
     
-    def has_no_color(self, v):
+    def has_no_color(self, v, add=""):
         """Check if a vertex have no color."""
-        return 'c' not in self.g.node[v]
+        return 'c'+add not in self.g.node[v]
     
     def __iter__(self):
         """Iterate over the vertices of the graph (exluding a and b)."""
@@ -102,3 +105,17 @@ class AuxiliaryGraph:
         s += ", ".join(str(s) for s in self.g.edges)
         s += "\n"
         return s
+
+
+def create_auxiliary_graph(c, g):
+    """Create the auxiliary graph that have the same superbubbles than g.
+    This function also connects every source to a and every sink to b.
+    This have the effect that every graph have exactly one source (a) and one sink (b).
+    So that the computation of outChild and outParent are much easier."""
+    c.copy_graph(g)
+    
+    for v in c:
+        if g.in_degree(v) > c.in_degree(v) or c.in_degree(v) == 0:
+            c.connect2source(v)
+        if g.out_degree(v) > c.out_degree(v)or c.out_degree(v) == 0:
+            c.connect2sink(v)

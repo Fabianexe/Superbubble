@@ -20,15 +20,3 @@ def get_strongly_connected_component(g):
     return dag, non_singelton
 
 
-def create_auxiliary_graph(c, g):
-    """Create the auxiliary graph that have the same superbubbles than g.
-    This function also connects every source to a and every sink to b.
-    This have the effect that every graph have exactly one source (a) and one sink (b).
-    So that the computation of outChild and outParent are much easier."""
-    c.copy_graph(g)
-    
-    for v in c:
-        if g.in_degree(v) > c.in_degree(v) or c.in_degree(v) == 0:
-            c.connect2source(v)
-        if g.out_degree(v) > c.out_degree(v)or c.out_degree(v) == 0:
-            c.connect2sink(v)

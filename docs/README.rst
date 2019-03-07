@@ -37,18 +37,27 @@ These needs that `setuptools`_ are installed.
 
 Usage
 -----
-The programms needs only a path to a graph file to work:
+The programms needs only a path to a graph file to work and the algorithm that it should use:
 
-   lsd *path*
+   lsd d *path*
+
+If you want other detection algorithm try:
+
+   lsd p *path*
+
+or
+
+   lsd o *path*
 
 If as input format not edgelist is used give the format with the -f parameter
 
-   lsd *path* -f gml
+   lsd d *path* -f gml
 
 If you want a different reporting format use -r
 
-   lsd *path* -r count
+   lsd d *path* -r count
 
 If you want not to detect superbubbles but week superbubbles use --week:
 
-   lsd *path* --week
+   lsd d *path* --week
+

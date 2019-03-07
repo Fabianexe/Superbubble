@@ -1,19 +1,19 @@
 from LSD.RMQ import RangeQuery
-from LSD.detecter import out_child, out_parent
+from LSD.detecter.outvalues import out_child2, out_parent2
 
 
 def super_bubble_brankovice(c, toposort, reporter):
     """Find all superbubbles in a DAG after Brankovice at all."""
-    ord_id = toposort.get_position
+    ord_id = toposort.index
     
     def report(s, t):
         reporter.rep(toposort[ord_id(s): ord_id(t) + 1])
     
     out_parent_list = []
     out_child_list = []
-    for k in range(toposort.n):
-        out_child_list.append(out_child(toposort[k], c, toposort))
-        out_parent_list.append(out_parent(toposort[k], c, toposort))
+    for k in range(len(toposort)):
+        out_child_list.append(out_child2(toposort[k], c, toposort))
+        out_parent_list.append(out_parent2(toposort[k], c, toposort))
     out_child_rmq = RangeQuery(out_child_list, max)
     out_parent_rmq = RangeQuery(out_parent_list, min)
     prev_ent = None
@@ -21,7 +21,7 @@ def super_bubble_brankovice(c, toposort, reporter):
     previous_entrance = []
     candidates = []
     backcand = {}
-    for k in range(toposort.n):
+    for k in range(len(toposort)):
         previous_entrance.append(prev_ent)
         v = toposort[k]
         alternative_entrance[v] = None
@@ -30,7 +30,6 @@ def super_bubble_brankovice(c, toposort, reporter):
         if is_entrance(k, c, toposort):
             insert_entrance(v, candidates, backcand)
             prev_ent = v
-    # print(candidates)
     while len(candidates) != 0:
         if candidates[-1][1]:
             delete_tail(candidates)
@@ -90,14 +89,14 @@ def is_exit(pos, c, toposort):
     """Check if a vertex is a exit"""
     if pos == 0:
         return False
-    return pos == out_child(toposort[pos - 1], c, toposort)
+    return pos == out_child2(toposort[pos - 1], c, toposort)
 
 
 def is_entrance(pos, c, toposort):
     """Check if a vertex is a entrance"""
-    if pos + 1 == toposort.n:
+    if pos + 1 == len(toposort):
         return False
-    return pos == out_parent(toposort[pos + 1], c, toposort)
+    return pos == out_parent2(toposort[pos + 1], c, toposort)
 
 
 def insert_exit(v, candidates):

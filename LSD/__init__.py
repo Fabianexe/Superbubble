@@ -1,72 +1,83 @@
 """The functions to handle the main function"""
 from argparse import ArgumentParser
-
-from LSD.detecter.brankovic import super_bubble_brankovice
 from LSD.inout import load
-from LSD.partition import get_strongly_connected_component, create_auxiliary_graph
-from LSD.dag_creation import construct_dag, choose_root, choose_random_root, construct_sung_graph
-from LSD.detecter import dag_superbubble
-from LSD.reporter import PrintReporter, PrintShortReporter, CountReporter, CompleteReporter, NullReporter
-from LSD.filter import SungFilter, WeekFilter
-from LSD.topological_sorting import toposort
+from LSD.detecter.onodera import onodera
+
 import logging
 
+from LSD.detecter.gaertner import dag_superbubble
+from LSD.detecter.brankovic import super_bubble_brankovice
+from LSD.dag_creation.sung import construct_sung_graph
+from LSD.dag_creation import construct_dag
+from LSD.dag_creation.roots import choose_random_root, choose_root
+from LSD.filter import MiniFilter, InnerFilter, SortFilter, SungFilter, WeekFilter, SCCFilter
+from LSD.reporter import PrintReporter, PrintShortReporter, CountReporter, CompleteReporter, NullReporter
+from LSD.partition import get_strongly_connected_component
+from LSD.auxiliary_graph import create_auxiliary_graph
+from LSD.topological_sorting import toposort
+from LSD.colorgraph import ColorGraph
+from LSD.roots import generate_roots
+from LSD.dfs_tree.order import create_dfs_order, create_dfs_order_cycle
+from LSD.detecter import superbubble
 
-__version__ = "1.1"
+__version__ = "2.0"
 """The version of the package"""
 
 logger = None
 
 
 def main():
-    """The main function that does the superbubble detection.
-    
-    The detection is done with this code::
-    
-        dag, scc = partition.get_strongly_connected_component(g)
-        for c in scc:
-            partition.create_auxiliary_graph(c, g)
-            if not (c.source_connected() or c.sink_connected()):
-                dag_creation.choose_random_root(c)
-                # includes tree construction
-                dag_creation.construct_sung_graph(c)
-                order = topological_sorting.toposort(c)
-                # Use ComplexFilter for the sung superbubble filtering after detection
-                detecter.dag_superbubble(c, order, filter.SungFilter(rep, order))
-            else:
-                dag_creation.choose_root(c)
-                # includes tree construction
-                dag_creation.construct_dag(c)
-                order = topological_sorting.toposort(c)
-                detecter.dag_superbubble(c, order, rep)
-        partition.create_auxiliary_graph(dag, g)
-        order = topological_sorting.toposort(dag)
-        detecter.dag_superbubble(dag, order, rep)
-    
-    """
+    """The main function that loads the commands."""
     global logger
-    parser = ArgumentParser(prog='lsd', description="A simple tool to detect superbubbles.")
 
-    parser.add_argument('--version', action='version', version='%(prog)s ' + __version__)
-    parser.add_argument('-v', '--verbose', action='store_true', dest="verbose", help="Create verbose output")
-    parser.add_argument('path', action='store', help="The path to the input file")
+    parent = ArgumentParser(prog='lsd', description="A simple tool to detect superbubbles.", add_help=False)
 
-    parser.add_argument('-f', '--format', action='store', dest="format", help="The format of the input file",
+    parent.add_argument('--version', action='version', version='%(prog)s ' + __version__)
+    parent.add_argument('-v', '--verbose', action='store_true', dest="verbose", help="Create verbose output")
+    parent.add_argument('path', action='store', help="The path to the input file. Use '-' for stdin.")
+
+    parent.add_argument('-f', '--format', action='store', dest="format", help="The format of the input file",
                         default="edgelist", choices=["edgelist", "adjlist", "gexf", "gml", "gpickle", "graph6",
                                                      "graphml", "leda", "pajek", "sparse6", "yaml"])
-    parser.add_argument('--week', action='store_true', dest="week", help="Detect week superbubbles.")
-    parser.add_argument('--sung', action='store_true', dest="sung", help="Use sung graph instead.")
-    parser.add_argument('--brankovic', action='store_true', dest="brankovic", help="Uses brankovic detector")
 
-    repo = parser.add_argument_group("Reporter", "The output reporter.")
-    repo.add_argument('-r', '--reporter', action='store',  dest="reporter",
-                            help="The reporter that is used to report the superbubbles",
-                            default="print", choices=['print', 'sprint', 'count', 'complete', 'null'])
-    repo.add_argument("-o", "--outpath", action='store', dest="outpath",
-                      help="The path to the output file. Is used by complete reporter.", default="complete.out")
+    filt = parent.add_argument_group("Filter", "The output filter. More then one can be applied.")
+
+    filt.add_argument('--week', action='store_true', dest="week", help="Detect week superbubbles.")
+    filt.add_argument('--sort', action='store_true', dest="sort", help="Sort output by source id.")
+    filt.add_argument('--mini', action='store_true', dest="mini", help="Remove superbubble+üö  of size 2.")
+    filt.add_argument('--inner', action='store_true', dest="inner", help="Only report not included superbubbles.")
+
+    repo = parent.add_argument_group("Reporter", "The output reporter. Only one can be applied. " +
+                                     "When nothing is given the print reporter is used.")
+    repo.add_argument('--print', action='store_true', dest="print", help="Print on stdout the complete superbubble.")
+    repo.add_argument('--sprint', action='store_true', dest="sprint",
+                      help="Print on stdout the s and t of a superbubble.")
+    repo.add_argument('--count', action='store_true', dest="count", help="Print on stdout the number of superbubbles.")
+    repo.add_argument('--null', action='store_true', dest="null", help="Report nothing.")
+    repo.add_argument('--complete', action='store', dest="outpath",
+                      help="Give a path where a complete output is written. Use '-' for stdout.")
+    
+    parser = ArgumentParser(prog='lsd', description="A simple tool to detect superbubbles.")
+
+    parser.set_defaults(comand=False)
+    
+    subparsers = parser.add_subparsers(title='Methods')
+    det = subparsers.add_parser('detect', help="Detect superbubbles.", aliases=['d'], parents=[parent])
+    det.set_defaults(func=detection, comand=True)
+    ono = subparsers.add_parser('onodera', help="Use the onodera algorithm.", aliases=['o'], parents=[parent])
+    ono.set_defaults(func=onodera_detection, comand=True)
+    part = subparsers.add_parser('part', help="Use the portioning approach.", aliases=['p'], parents=[parent])
+    part.set_defaults(func=part_detection, comand=True)
+
+    part.add_argument('--sung', action='store_true', dest="sung", help="Use sung graph instead.")
+    part.add_argument('--brankovic', action='store_true', dest="brankovic", help="Uses brankovic detector")
     
     args = parser.parse_args()
-
+    
+    if not args.comand:
+        parser.print_help()
+        exit(0)
+    
     # Logger stuff
     if logger is None:
         level = logging.INFO
@@ -79,7 +90,12 @@ def main():
         formatter = logging.Formatter("%(levelname)-5s %(asctime)s: %(message)s", "%H:%M:%S")
         ch.setFormatter(formatter)
         logger.addHandler(ch)
-    logger.debug("Logging startet")
+    
+    logger.debug("Start lsd version {v}".format(v=__version__))
+    
+    if len([x for x in ("print", "sprint", "null", "count", "outpath") if vars(args)[x]]) > 1:
+        print("Give only one reporter!")
+        exit(1)
     
     # Load graph
     logger.debug("Load file in {format} from path: {path}.".format(format=args.format, path=args.path))
@@ -87,43 +103,83 @@ def main():
     logger.debug("Graph loaded")
     
     # Report type stuff 1
-    rep = None
-    
-    if args.reporter == "print":
-        logger.debug("Use simple print reporter.")
-        rep = PrintReporter()
-    elif args.reporter == "sprint":
+    if args.sprint:
         logger.debug("Use short print reporter.")
         rep = PrintShortReporter()
-    elif args.reporter == "count":
+    elif args.count:
         logger.debug("Use count reporter.")
         rep = CountReporter()
-    elif args.reporter == "complete":
-        logger.debug("Use complete reportor to {path}.".format(path=args.outpath))
+    elif args.outpath:
+        logger.debug("Use complete reporter to {path}.".format(path=args.outpath))
         rep = CompleteReporter(g, args.outpath)
-    elif args.reporter == "null":
+    elif args.null:
         logger.debug("Use null reporter.")
         rep = NullReporter()
+    else:
+        logger.debug("Use simple print reporter.")
+        rep = PrintReporter()
+    
+    # Filter stuff
+    if args.sort:
+        logger.debug("Sort filter is applied.")
+        rep = SortFilter(rep)
+    if args.mini:
+        logger.debug("Mini filter is applied.")
+        rep = MiniFilter(rep)
+    if args.inner:
+        logger.debug("Inner filter is applied.")
+        rep = InnerFilter(rep)
+    if not args.week:
+        logger.debug("Week superbublle filter is applied.")
+        rep = WeekFilter(rep, g)
 
+    args.func(g, rep, args)
+    
+    # Report type stuff 2
+    logger.debug("Finalize output.")
+    rep.fin()
+    logger.debug("Finished.")
+
+
+def onodera_detection(g, rep, *_):
+    logger.debug("Start onodera algorithm.")
+    onodera(g, rep)
+
+
+def detection(graph, rep, *_):
+    logger.debug("Start gaertner 2019 algorithm.")
+    g = ColorGraph(graph)
+    for v, cycle in generate_roots(g):
+        if cycle:
+            order, v2 = create_dfs_order_cycle(v, g)
+            superbubble(g, order, SCCFilter(rep, v, v2), v, v2)
+        else:
+            order = create_dfs_order(v, g)
+            superbubble(g, order, rep, v)
+
+
+def part_detection(g, rep, args):
+    logger.debug("Start part algorithm.")
     # Use brankovic
     if args.brankovic:
+        logger.debug("Use brankovic algorithm.")
         detect = super_bubble_brankovice
     else:
+        logger.debug("Use gaertner 2018 algorithm to detect.")
         detect = dag_superbubble
     
     # Use sung
     if args.sung:
+        logger.debug("Use sung algorithm.")
         construct = construct_sung_graph
         
-        detect2 = lambda c2, order2, rep2: detect(c2, order2, SungFilter(rep2, order2, c2))
+        def detect2(c2, order2, rep2):
+            return detect(c2, order2, SungFilter(rep2, order2, c2))
     else:
+        logger.debug("Use gaertner 2018 algorithm to part construction.")
         construct = construct_dag
         detect2 = detect
-
-    # Only superbubbles and not week superbubbles
-    if not args.week:
-        rep = WeekFilter(rep, g)
-        
+    
     # Detect superbubble
     logger.debug("Find SCCs.")
     dag, scc = get_strongly_connected_component(g)
@@ -161,8 +217,3 @@ def main():
     order = toposort(dag)
     logger.debug("Detect superbubbles")
     detect(dag, order, rep)
-
-    # Report type stuff 2
-    logger.debug("Finalize output.")
-    rep.fin()
-    logger.debug("Finished.")

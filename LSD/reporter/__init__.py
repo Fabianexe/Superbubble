@@ -1,10 +1,9 @@
-"""The different Reporter of superbubbles"""
+
 from abc import ABC, abstractmethod
 import time
 
 
 class Reporter(ABC):
-    """The abstract reporter class that every Reporter (and Filter) implements."""
     @abstractmethod
     def rep(self, dag):
         pass
@@ -15,9 +14,6 @@ class Reporter(ABC):
 
 
 class PrintReporter(Reporter):
-    """Simple print the Superbubble:
-    The superbubble <1,4> creates the output.
-    [1, 2, 3, 4]"""
     def rep(self, dag):
         print(dag)
     
@@ -26,9 +22,6 @@ class PrintReporter(Reporter):
 
 
 class PrintShortReporter(Reporter):
-    """Print the entrance and exit of the Superbubble.
-        The superbubble <1,4> creates the output:
-        <1,4>"""
     def rep(self, dag):
         print("<{ind},{out}>".format(ind=dag[0], out=dag[-1]))
     
@@ -37,7 +30,6 @@ class PrintShortReporter(Reporter):
 
 
 class CountReporter(Reporter):
-    """Count all Superbubble and print the number."""
     def __init__(self):
         self.sum = 0
     
@@ -54,6 +46,7 @@ class CompleteReporter(Reporter):
     Inspired by the output of SUPBUB.
     The superbubble <1,4> creates the output:
     <1,4>"""
+    
     def __init__(self, g, path):
         self.head = "Vertices: {v}\nEdges: {e}\n".format(v=g.number_of_nodes(), e=g.number_of_edges())
         self.body = []
@@ -66,15 +59,17 @@ class CompleteReporter(Reporter):
         self.sum += 1
     
     def fin(self):
-        self.head += "Elapsed time for processing: {t} secs.\nNumber of superbubbles found: {sum}.\n"\
-            .format(t=time.time()-self.t, sum=self.sum)
-        f = open(self.path, "w")
-        f.write(self.head)
+        self.head += "Elapsed time for processing: {t} secs.\nNumber of superbubbles found: {sum}.\n" \
+            .format(t=time.time() - self.t, sum=self.sum)
         self.body.sort()
+        if self.path == "-":
+            from sys import stdout
+            f = stdout
+        else:
+            f = open(self.path, "w")
+        f.write(self.head)
         for dag in self.body:
             f.write("<{ind},{out}>\n".format(ind=dag[0], out=dag[-1]))
-        
-
     
 class NullReporter(Reporter):
     """Report nothing at all. Can be used for time test."""

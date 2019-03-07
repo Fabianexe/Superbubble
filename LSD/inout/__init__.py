@@ -2,7 +2,9 @@ import networkx as nx
 
 
 def load(path, f="edgelist"):
-    """Load the graph."""
+    if path == "-":
+        from sys import stdin
+        path = stdin.buffer
     g = None
     if f == "edgelist":
         g = load_edgelist(path)
@@ -26,7 +28,6 @@ def load(path, f="edgelist"):
         g = load_sparse6(path)
     elif f == "yaml":
         g = load_yaml(path)
-    
     return g
 
 
@@ -43,32 +44,32 @@ def load_gexf(path):
 
 
 def load_gml(path):
-    return nx.read_gml(path, create_using=nx.DiGraph())
+    return nx.read_gml
 
 
 def load_gpickle(path):
-    return nx.read_gpickle(path, create_using=nx.DiGraph())
+    return nx.read_gpickle
 
 
 def load_graph6(path):
-    return nx.read_graph6(path, create_using=nx.DiGraph())
+    return nx.read_graph6
 
 
 def load_graphml(path):
-    return nx.read_graphml(path, create_using=nx.DiGraph())
+    return nx.read_graphml
 
 
 def load_leda(path):
-    return nx.read_leda(path, create_using=nx.DiGraph())
+    return nx.read_leda
 
 
 def load_pajek(path):
-    return nx.read_pajek(path, create_using=nx.DiGraph())
+    return nx.read_pajek
 
 
 def load_sparse6(path):
-    return nx.read_sparse6(path, create_using=nx.DiGraph())
+    return nx.read_sparse6
 
 
 def load_yaml(path):
-    return nx.read_yaml(path, create_using=nx.DiGraph())
+    return nx.read_yaml
